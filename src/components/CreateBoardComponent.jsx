@@ -12,8 +12,9 @@ class CreateBoardComponent extends Component {
       title: "",
       contents: "",
       memberNo: "",
-      selectedFile: null,
+      selectedFiles: {},
       //blob : new Blob([]),
+      delNo: [],
     };
 
     this.changeTypeHandler = this.changeTypeHandler.bind(this);
@@ -22,6 +23,7 @@ class CreateBoardComponent extends Component {
     this.changeMemberNoHandler = this.changeMemberNoHandler.bind(this);
     this.createBoard = this.createBoard.bind(this);
     this.uploadBoard = this.uploadBoard.bind(this);
+    //this.onSubmit = this.onSubmit.bind(this);
     this.handleFileInputHandler = this.handleFileInputHandler.bind(this);
   }
 
@@ -41,9 +43,26 @@ class CreateBoardComponent extends Component {
     this.setState({ memberNo: event.target.value });
   };
 
-  handleFileInputHandler = (event) => {
-    this.setState({ selectedFile: event.target.files[0] });
+  handleFileInputHandler = async (event) => {
+    event.persist();
+    // for (let i = 0; i < file.length; i++) {
+    //   this.selectedFiles.push(file[i]);
+    //   console.log(this.selectedFiles);
+    // }
+
+    console.log(event.target.files);
+    this.setState({ selectedFiles: event.target.files });
+    // for (let i = 0; i < event.target.files.length; i++) {
+    // console.log(
+    //   "for:-----------------:" + i + ";" + event.target.files.FileList[i]
+    // );
+
+    // this.setState({
+    //   selectedFiles: [...this.state.selectedFiles, event.target.files],
+    // });
+    // }
   };
+
   //-----------------------테스트------------------------
   handlePost = (event) => {
     event.preventDefault();
@@ -97,47 +116,83 @@ class CreateBoardComponent extends Component {
     }
   };
 
+  //create a new board
+  //onSubmit = (event) => {
   uploadBoard = (event) => {
     console.log("--------uploadBoard-------");
 
     event.preventDefault();
-    const board = {
+    event.persist();
+
+    let board = {
       type: Number(this.state.type),
       title: this.state.title,
       contents: this.state.contents,
       memberNo: Number(this.state.memberNo),
     };
-    console.log("uploadBoard data => " + JSON.stringify(board));
 
-    const formData = new FormData();
+    console.log(this.state.selectedFiles.length);
 
-    // let blob = new Blob([]);
-    // const file = this.state.selectedFile;
-    // console.log("1 :" + file.name);
-    // console.log("2 :" + file.type);
-    // // 파일명blob
-    // blob = new Blob([file], { type: file.type });
-    // formData.append("file", blob);
-
-    //multipartFormData
-    formData.append("file", this.state.selectedFile);
-    formData.append("jsonList", new Blob([JSON.stringify(board)]), {
-      type: "application/json",
-    });
-
-    for (let key of formData.keys()) {
-      console.log(key, ":", formData.get(key));
-    }
-
+    let files = this.state.selectedFiles;
+    console.log("files:" + files);
+    console.log("files.length:" + files.length);
+    console.log("files:" + files[0]);
+    console.log("files:" + files[1]);
+    console.log("files:" + files[2]);
+    //Create Board
     if (this.state.no === "_create") {
-      //BoardService.createBoard(board).then((res) => {
-      BoardService.upload(formData).then((res) => {
-        this.props.history.push("/board");
-      });
+      //Board Data
+      if (files.length === 0) {
+        console.log("uploadBoard data => " + JSON.stringify(board));
+        BoardService.createBoard(board).then((res) => {
+          this.props.history.push("/board");
+        });
+        //create FromData
+      } else {
+        //multipartFormData
+        let formData = new FormData();
+        console.log("-----------input formdata---------------------");
+
+        //formData.append("files", this.state.selectedFiles);
+
+        for (let i = 0; i < files.length; i++) {
+          formData.append("files", files[i]);
+        }
+        formData.append("jsonList", new Blob([JSON.stringify(board)]), {
+          type: "application/json",
+        });
+
+        console.log("-----------for formData---------------------");
+        for (let key of formData.keys()) {
+          console.log(key, ":", formData.get(key));
+        }
+        BoardService.createBoard_formData(formData).then((res) => {
+          this.props.history.push("/board");
+        });
+      }
+      // Update Board
     } else {
-      BoardService.updateBoard(this.state.no, formData).then((res) => {
-        this.props.history.push("/board");
-      });
+      //Board Data
+      if (files.length === 0) {
+        console.log("uploadBoard data => " + JSON.stringify(board));
+        BoardService.updateBoard(this.state.no, board).then((res) => {
+          this.props.history.push("/board");
+        });
+      } else {
+        //multipartFormData
+        let formData = new FormData();
+        formData.append("file", this.state.selectedFile);
+        formData.append("jsonList", new Blob([JSON.stringify(board)]), {
+          type: "application/json",
+        });
+
+        for (let key of formData.keys()) {
+          console.log(key, ":", formData.get(key));
+        }
+        BoardService.upload(formData).then((res) => {
+          this.props.history.push("/board");
+        });
+      }
     }
   };
 
@@ -228,11 +283,13 @@ class CreateBoardComponent extends Component {
                   <div className="form-group">
                     <input
                       type="file"
-                      name="file"
+                      name="profile_files"
+                      multiple="multiple"
                       onChange={this.handleFileInputHandler}
                     />
                   </div>
                   <button
+                    type="onSubmit"
                     className="btn btn-success"
                     //onClick={this.createBoard}
                     onClick={this.uploadBoard}
