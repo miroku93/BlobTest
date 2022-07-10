@@ -32,6 +32,12 @@ class ListBoardComponent extends Component {
           paging: res.data.pagingData,
           boards: res.data.list,
         });
+      } else {
+        this.setState({
+          p_num: 1,
+          paging: {},
+          boards: [],
+        });
       }
     });
   }
@@ -94,23 +100,25 @@ class ListBoardComponent extends Component {
   }
 
   deleteView(e) {
-    e.preventDefault();
     e.persist();
-    if (
-      window.confirm(
-        "정말로 글을 삭제하시겠습니까?\n삭제된 글은 복구 할 수 없습니다."
-      )
-    ) {
-      let no = this.state.checkLists;
 
-      if (no.length > 0) {
+    let no = this.state.checkLists;
+    if (no.length > 0) {
+      if (
+        window.confirm(
+          "정말로 글을 삭제하시겠습니까?\n삭제된 글은 복구 할 수 없습니다."
+        )
+      ) {
         console.log("delete no => " + no);
         BoardService.deleteBoard(no).then((res) => {
           console.log("delete result => " + JSON.stringify(res));
           if (res.status === 200) {
-            //this.props.history.push("/board");
-            this.setState({ checkLists: [] });
-            this.componentDidMount();
+            this.setState({
+              p_num: 1,
+              paging: {},
+              boards: [],
+              checkLists: [],
+            });
           } else {
             alert("글 삭제가 실패했습니다.");
           }
@@ -120,6 +128,8 @@ class ListBoardComponent extends Component {
         alert("글 삭제가 실패했습니다!!!!");
         this.props.history.push("/board");
       }
+    } else {
+      alert("삭제할 글을 선택해주세요");
     }
   }
 
