@@ -21,13 +21,18 @@ class ListBoardComponent extends Component {
   componentDidMount() {
     // BoardService.getBoards().then((res) => {
     //   this.setState({ boards: res.data });
+
     BoardService.getBoards(this.state.p_num).then((res) => {
       console.log(res);
-      this.setState({
-        p_num: res.data.pagingData.currentPageNum,
-        paging: res.data.pagingData,
-        boards: res.data.list,
-      });
+      if (res.data != "") {
+        console.log(res.data.pagingData.currentPageNum);
+
+        this.setState({
+          p_num: res.data.pagingData.currentPageNum,
+          paging: res.data.pagingData,
+          boards: res.data.list,
+        });
+      }
     });
   }
 
@@ -101,10 +106,11 @@ class ListBoardComponent extends Component {
       if (no.length > 0) {
         console.log("delete no => " + no);
         BoardService.deleteBoard(no).then((res) => {
-          //BoardService.deleteBoard(no).then((res) => {
           console.log("delete result => " + JSON.stringify(res));
           if (res.status === 200) {
-            this.props.history.push("/board");
+            //this.props.history.push("/board");
+            this.setState({ checkLists: [] });
+            this.componentDidMount();
           } else {
             alert("글 삭제가 실패했습니다.");
           }
@@ -207,7 +213,7 @@ class ListBoardComponent extends Component {
         <h2 className="text-center">Boards List</h2>
         <div className="row">
           <button className="btn btn-primary" onClick={this.createBoard}>
-            글 작성
+            {""}글 작성
           </button>
           <button
             className="btn btn-danger"
@@ -246,8 +252,10 @@ class ListBoardComponent extends Component {
                       // checked={
                       //   this.state.checkLists.filter(board.no) ? true : false
                       // }
-                      onChange={(e) => this.changeHandler(e, board.no)}
                       //checked={this.checkLists.includes(board)}
+
+                      // 실행확인
+                      onChange={(e) => this.changeHandler(e, board.no)}
                     />
                   </td>
                   <td> {board.no} </td>
