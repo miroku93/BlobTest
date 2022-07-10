@@ -122,11 +122,8 @@ class ListBoardComponent extends Component {
           } else {
             alert("글 삭제가 실패했습니다.");
           }
-          this.props.history.push("/board");
+          this.setState({ checkLists: [] });
         });
-      } else {
-        alert("글 삭제가 실패했습니다!!!!");
-        this.props.history.push("/board");
       }
     } else {
       alert("삭제할 글을 선택해주세요");
