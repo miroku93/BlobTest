@@ -142,7 +142,7 @@ class CreateBoardComponent extends Component {
     //Create Board
     if (this.state.no === "_create") {
       //Board Data
-      if (files.length === 0) {
+      if (files.length == 0 || files.length == undefined) {
         console.log("uploadBoard data => " + JSON.stringify(board));
         BoardService.createBoard(board).then((res) => {
           this.props.history.push("/board");

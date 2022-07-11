@@ -21,12 +21,9 @@ class ListBoardComponent extends Component {
   componentDidMount() {
     // BoardService.getBoards().then((res) => {
     //   this.setState({ boards: res.data });
-
     BoardService.getBoards(this.state.p_num).then((res) => {
       console.log(res);
       if (res.data != "") {
-        console.log(res.data.pagingData.currentPageNum);
-
         this.setState({
           p_num: res.data.pagingData.currentPageNum,
           paging: res.data.pagingData,
@@ -42,6 +39,7 @@ class ListBoardComponent extends Component {
     });
   }
 
+  // function
   // changeHandler = (checked, id) => {
   //   if (checked) {
   //     this.setState([...this.state.checkLists, id]);
@@ -51,6 +49,7 @@ class ListBoardComponent extends Component {
   //   }
   // };
 
+  //Class
   changeHandler = (event, no) => {
     // 체크할 시 CheckList에 id값 넣기
     if (event.target.checked) {
@@ -113,12 +112,8 @@ class ListBoardComponent extends Component {
         BoardService.deleteBoard(no).then((res) => {
           console.log("delete result => " + JSON.stringify(res));
           if (res.status === 200) {
-            this.setState({
-              p_num: 1,
-              paging: {},
-              boards: [],
-              checkLists: [],
-            });
+            this.setState({ checkLists: [] });
+            this.componentDidMount();
           } else {
             alert("글 삭제가 실패했습니다.");
           }
