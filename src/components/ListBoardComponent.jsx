@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from "react";
 import BoardService from "../service/BoardService";
+import { ExportCSV } from "./ExportCSV";
 
 class ListBoardComponent extends Component {
   constructor(props) {
@@ -11,6 +12,7 @@ class ListBoardComponent extends Component {
       paging: {},
       boards: [],
       checkLists: [],
+      fileName: "Customers",
     };
 
     this.createBoard = this.createBoard.bind(this);
@@ -193,6 +195,8 @@ class ListBoardComponent extends Component {
     }
   }
 
+  x;
+
   isMoveToLastPage() {
     if (this.state.p_num !== this.state.paging.pageNumCountTotal) {
       return (
@@ -224,6 +228,10 @@ class ListBoardComponent extends Component {
           >
             삭제
           </button>
+          <ExportCSV
+            csvData={this.state.boards}
+            fileName={this.state.fileName}
+          />
         </div>
         <div className="row">
           <table className="table table-striped table-bordered">
