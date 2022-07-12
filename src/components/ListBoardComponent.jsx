@@ -156,7 +156,8 @@ class ListBoardComponent extends Component {
             onClick={() => this.listBoard(this.state.paging.currentPageNum - 1)}
             tabindex="-1"
           >
-            Previous
+            &lt;
+            {/* Previous */}
           </a>
         </li>
       );
@@ -172,7 +173,8 @@ class ListBoardComponent extends Component {
             onClick={() => this.listBoard(this.state.paging.currentPageNum + 1)}
             tabIndex="-1"
           >
-            Next
+            &gt;
+            {/* Next */}
           </a>
         </li>
       );
@@ -188,14 +190,13 @@ class ListBoardComponent extends Component {
             onClick={() => this.listBoard(1)}
             tabIndex="-1"
           >
-            Move to First Page
+            &lt;&lt;
+            {/* Move to First Page */}
           </a>
         </li>
       );
     }
   }
-
-  x;
 
   isMoveToLastPage() {
     if (this.state.p_num !== this.state.paging.pageNumCountTotal) {
@@ -206,7 +207,8 @@ class ListBoardComponent extends Component {
             onClick={() => this.listBoard(this.state.paging.pageNumCountTotal)}
             tabIndex="-1"
           >
-            LastPage({this.state.paging.pageNumCountTotal})
+            &gt;&gt;
+            {/* LastPage({this.state.paging.pageNumCountTotal}) */}
           </a>
         </li>
       );
