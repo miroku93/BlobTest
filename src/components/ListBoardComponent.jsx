@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import BoardService from "../service/BoardService";
 import { ExportCSV } from "./ExportCSV";
+import { useTranslation } from "react-i18next";
 
 class ListBoardComponent extends Component {
   constructor(props) {
@@ -199,7 +200,15 @@ class ListBoardComponent extends Component {
   }
 
   isMoveToLastPage() {
-    if (this.state.p_num !== this.state.paging.pageNumCountTotal) {
+    console.log(
+      "this.state.paging.pageNumCountTotal" +
+        this.state.paging.pageNumCountTotal
+    );
+    console.log("this.state.p_num " + this.state.p_num);
+    if (
+      this.state.p_num !== this.state.paging.pageNumCountTotal &&
+      this.state.paging.pageNumCountTotal !== undefined
+    ) {
       return (
         <li className="page-item">
           <a
