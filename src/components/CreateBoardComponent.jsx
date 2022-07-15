@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import BoardService from "../service/BoardService";
 import axios from "axios";
+import { FormattedMessage } from "react-intl";
 
 class CreateBoardComponent extends Component {
   constructor(props) {
@@ -237,7 +238,14 @@ class CreateBoardComponent extends Component {
               <div className="card-body">
                 <form encType="multipart/form-data">
                   <div className="form-group">
-                    <label> Type </label>
+                    <label>
+                      {" "}
+                      Type
+                      <FormattedMessage
+                        id="type"
+                        values={{ locale: localStorage.getItem("locale") }}
+                      />
+                    </label>
                     <select
                       placeholder="type"
                       name="type"
@@ -251,6 +259,7 @@ class CreateBoardComponent extends Component {
                   </div>
                   <div className="form-group">
                     <label> Title </label>
+
                     <input
                       type="text"
                       placeholder="title"
@@ -261,7 +270,12 @@ class CreateBoardComponent extends Component {
                     />
                   </div>
                   <div className="form-group">
-                    <label> Contents </label>
+                    <label> Contents</label>
+                    <FormattedMessage
+                      id="title"
+                      defaultMessage="메세지를 찾을 수 없습니다. (locale: {locale})"
+                      values={{ locale: localStorage.getItem("locale") }}
+                    />
                     <textarea
                       placeholder="contents"
                       name="contents"

@@ -2,7 +2,9 @@
 import React, { Component } from "react";
 import BoardService from "../service/BoardService";
 import { ExportCSV } from "./ExportCSV";
-import { useTranslation } from "react-i18next";
+//import { useTranslation } from "react-i18next";
+import { IntlProvider, FormattedMessage } from "react-intl";
+import message from "../lang/data";
 
 class ListBoardComponent extends Component {
   constructor(props) {
@@ -14,11 +16,13 @@ class ListBoardComponent extends Component {
       boards: [],
       checkLists: [],
       fileName: "Customers",
+      locale: "ko",
     };
 
     this.createBoard = this.createBoard.bind(this);
     this.deleteView = this.deleteView.bind(this);
     this.changeHandler = this.changeHandler.bind(this);
+    this.langhandleChange = this.langhandleChange.bind(this);
   }
 
   componentDidMount() {
@@ -100,6 +104,11 @@ class ListBoardComponent extends Component {
     });
     //console.log(this.state.boards);
   }
+
+  langhandleChange = (e) => {
+    this.setState({ locale: e.target.value });
+    localStorage.setItem("locale", e.target.value);
+  };
 
   deleteView(e) {
     e.persist();
@@ -227,10 +236,22 @@ class ListBoardComponent extends Component {
   render() {
     return (
       <div>
+        <select
+          onChange={this.langhandleChange}
+          defaultValue={this.state.locale}
+        >
+          {["en", "ko"].map((x) => (
+            <option key={x}>{x}</option>
+          ))}
+        </select>
+        {/* <IntlProvider
+          locale={this.state.locale}
+          messages={message[this.state.locale]} */}
         <h2 className="text-center">Boards List</h2>
         <div className="row">
           <button className="btn btn-primary" onClick={this.createBoard}>
             {""}글 작성
+            <FormattedMessage id="title" />
           </button>
           <button
             className="btn btn-danger"
@@ -238,7 +259,17 @@ class ListBoardComponent extends Component {
             onClick={this.deleteView}
           >
             삭제
+            <FormattedMessage
+              id="heading"
+              defaultMessage="메세지를 찾을 수 없습니다. (locale: {locale})"
+              values={{ locale: localStorage.getItem("locale") }}
+            />
           </button>
+          <FormattedMessage
+            id="title"
+            defaultMessage="메세지를 찾을 수 없습니다. (locale: {locale})"
+            values={{ locale: localStorage.getItem("locale") }}
+          />
           <ExportCSV
             csvData={this.state.boards}
             fileName={this.state.fileName}
@@ -308,6 +339,8 @@ class ListBoardComponent extends Component {
             </ul>
           </nav>
         </div>
+        {/* </IntlProvider>
+        , */}
       </div>
     );
   }

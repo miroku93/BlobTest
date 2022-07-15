@@ -1,0 +1,8 @@
+{
+  "title": "리액트 Intl",
+  "info": "현재 언어는 {locale}입니다.",
+  "label": "언어",
+  "button": "저장",
+
+  "type": "타입"
+}

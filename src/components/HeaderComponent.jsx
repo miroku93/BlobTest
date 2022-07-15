@@ -4,8 +4,17 @@ class HeaderComponent extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      locale: "ko",
+    };
+
+    this.langhandleChange = this.langhandleChange.bind(this);
   }
+
+  langhandleChange = (e) => {
+    this.setState({ locale: e.target.value });
+    localStorage.setItem("locale", e.target.value);
+  };
 
   render() {
     return (
@@ -17,15 +26,18 @@ class HeaderComponent extends Component {
                 App
               </a>
             </div>
+
             <div>
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <a
-                    href="http://localhost:3000/member-join"
-                    className="nav-link"
+                  <select
+                    onChange={this.langhandleChange}
+                    defaultValue={localStorage.getItem("locale")}
                   >
-                    JOIN
-                  </a>
+                    {["en", "ko"].map((x) => (
+                      <option key={x}>{x}</option>
+                    ))}
+                  </select>
                 </li>
               </ul>
             </div>
